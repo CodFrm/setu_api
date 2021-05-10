@@ -136,7 +136,7 @@ func (p *pixiv) Download(user, id string, small bool, w io.Writer) error {
 	}
 	path := picDri(id, small)
 	_, err = os.Stat(path)
-	if !(err == nil || os.IsExist(err)) {
+	if err != nil && os.IsNotExist(err) {
 		buf := bytes.NewBuffer(nil)
 		// 不存在,下载到本地
 		if small {
@@ -151,8 +151,6 @@ func (p *pixiv) Download(user, id string, small bool, w io.Writer) error {
 		if err != nil {
 			return err
 		}
-	} else {
-		return err
 	}
 	file, err := os.Open(path)
 	if err != nil {
