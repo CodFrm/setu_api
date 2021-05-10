@@ -61,7 +61,17 @@ func (p *pixiv) relateKeyword(ctx *gin.Context) {
 }
 
 func (p *pixiv) rand(ctx *gin.Context) {
-
+	handel(ctx, func() (interface{}, error) {
+		u, err := p.userid(ctx)
+		if err != nil {
+			return nil, err
+		}
+		item, err := p.GetPicInfo(u, "")
+		if err != nil {
+			return nil, err
+		}
+		return nil, p.Pixiv.Download(u, item.Id, true, ctx.Writer)
+	})
 }
 
 func (p *pixiv) small(ctx *gin.Context) {
